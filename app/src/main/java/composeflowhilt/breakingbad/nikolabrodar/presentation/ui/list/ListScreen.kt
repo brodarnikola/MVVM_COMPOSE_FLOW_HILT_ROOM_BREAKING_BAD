@@ -16,19 +16,18 @@
 package composeflowhilt.breakingbad.nikolabrodar.presentation.ui.list
 
 import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.res.stringResource
@@ -69,14 +68,38 @@ private fun Body(
             .verticalScroll(rememberScrollState())
             .statusBarsPadding()
     ) {
-        Text(
-            stringResource(R.string.brba),
-            color = MaterialTheme.colors.primaryVariant,
-            style = MaterialTheme.typography.h1,
-            fontSize = 78.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(horizontal = 16.dp)
-        )
+        Row(
+            modifier = Modifier.padding(all = 10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            Text(
+                stringResource(R.string.brba),
+                color = MaterialTheme.colors.primaryVariant,
+                style = MaterialTheme.typography.h1,
+                fontSize = 78.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+
+            Button(
+                onClick = { /*TODO*/ },
+
+                Modifier.background(color = Color.Green),
+                border = BorderStroke(width = 1.dp, brush = SolidColor(Color.Blue)),
+                // below line is use to add shape for our button.
+                // shape = MaterialTheme.shapes.medium
+            ) {
+                Icon(
+                    Icons.Filled.Favorite,
+                    contentDescription = "Favorite",
+                    modifier = Modifier.size(ButtonDefaults.IconSize)
+                )
+                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                Text("Characters")
+            }
+
+        }
         StaggeredVerticalGrid(
             maxColumnWidth = 160.dp,
             modifier = Modifier.padding(4.dp)
@@ -137,8 +160,8 @@ fun FeaturedList(
                     }
                     .background(
                         Brush.verticalGradient(
-                            0.6f to Color.Transparent,
-                            1f to Color(0x4d000000),
+                            0.2f to Color.Transparent,
+                            0.7f to Color(0x4d000000),
                         )
                     )
             ) { }
