@@ -85,8 +85,11 @@ private fun Body(
             Button(
                 onClick = { /*TODO*/ },
 
-                Modifier.background(color = Color.Green),
-                border = BorderStroke(width = 1.dp, brush = SolidColor(Color.Blue)),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = MaterialTheme.colors.primaryVariant,
+                    contentColor = Color.White)
+                // Modifier.background(color = MaterialTheme.colors.primaryVariant,),
+                // border = BorderStroke(width = 1.dp, brush = SolidColor(Color.Blue)),
                 // below line is use to add shape for our button.
                 // shape = MaterialTheme.shapes.medium
             ) {
