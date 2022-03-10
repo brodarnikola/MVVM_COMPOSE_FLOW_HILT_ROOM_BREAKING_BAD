@@ -105,7 +105,7 @@ private fun Body(
                     modifier = Modifier.size(ButtonDefaults.IconSize)
                 )
                 Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text("Characters")
+                Text("Google maps")
             }
 
         }

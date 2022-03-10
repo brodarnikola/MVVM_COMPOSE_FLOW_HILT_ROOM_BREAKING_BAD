@@ -15,23 +15,24 @@
  */
 package composeflowhilt.breakingbad.nikolabrodar.app.inject
 
-import composeflowhilt.breakingbad.nikolabrodar.data.repository.CharactersRepositoryImpl
-import composeflowhilt.breakingbad.nikolabrodar.domain.repository.CharactersRepository
+import composeflowhilt.breakingbad.nikolabrodar.data.local.db.AppDatabase
+import composeflowhilt.breakingbad.nikolabrodar.data.repository.ParkingSpotRepositoryImpl
+import composeflowhilt.breakingbad.nikolabrodar.domain.repository.ParkingSpotRepository
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class RepositoryModule {
+object ParkingSpotRepositoryModule {
 
-    @Binds
-    abstract fun bindCharactersRepository(repository: CharactersRepositoryImpl): CharactersRepository
-
-//    @Provides
-//    fun provideParkingSpotRepository(appDatabase: AppDatabase): ParkingSpotRepository {
-//        return ParkingSpotRepositoryImpl(appDatabase.parkingSpotDao)
-//    }
+    @Provides
+    @Singleton
+    fun provideParkingSpotRepository(appDatabase: AppDatabase): ParkingSpotRepository {
+        return ParkingSpotRepositoryImpl(appDatabase.parkingSpotDao)
+    }
 }

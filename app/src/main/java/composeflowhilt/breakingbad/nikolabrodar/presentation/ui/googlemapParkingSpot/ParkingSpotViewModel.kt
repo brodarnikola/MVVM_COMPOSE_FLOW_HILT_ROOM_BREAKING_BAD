@@ -15,43 +15,63 @@
  */
 package composeflowhilt.breakingbad.nikolabrodar.presentation.ui.googlemapParkingSpot
 
-import androidx.lifecycle.SavedStateHandle
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.maps.model.MapStyleOptions
+import composeflowhilt.breakingbad.nikolabrodar.domain.model.ParkingSpot
+import composeflowhilt.breakingbad.nikolabrodar.domain.repository.ParkingSpotRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import composeflowhilt.breakingbad.nikolabrodar.domain.model.Character
-import composeflowhilt.breakingbad.nikolabrodar.domain.usecase.GetCharacterUseCase
-import composeflowhilt.breakingbad.nikolabrodar.domain.usecase.UpdateFavoriteUseCase
-import composeflowhilt.breakingbad.nikolabrodar.presentation.ui.BaseFavoriteViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ParkingSpotViewModel @Inject constructor(
-    handle: SavedStateHandle,
-    private val getCharacterUseCase: GetCharacterUseCase,
-    updateFavoriteUseCase: UpdateFavoriteUseCase,
-) : BaseFavoriteViewModel(updateFavoriteUseCase) {
+class MapsViewModel @Inject constructor(
+    private val repository: ParkingSpotRepository
+): ViewModel() {
 
-    private val _character = MutableStateFlow(Character())
-    val character: StateFlow<Character> get() = _character.asStateFlow()
+    var state by mutableStateOf(MapState())
 
     init {
-        val id = handle.get<Long>("id") ?: throw Exception()
-        getInfo(id)
+        viewModelScope.launch {
+            repository.getParkingSpots().collectLatest { spots ->
+                state = state.copy(
+                    parkingSpots = spots
+                )
+            }
+        }
     }
 
-    private fun getInfo(id: Long) {
-        getCharacterUseCase.execute(id)
-            .onEach { _character.value = it }
-            .flowOn(Dispatchers.IO)
-            .catch { e -> e.printStackTrace() }
-            .launchIn(viewModelScope)
+    fun onEvent(event: MapEvent) {
+        when(event) {
+            is MapEvent.ToggleFalloutMap -> {
+                state = state.copy(
+                    properties = state.properties.copy(
+                        mapStyleOptions = if(state.isFalloutMap) {
+                            null
+                        } else MapStyleOptions(MapStyle.json),
+                    ),
+                    isFalloutMap = !state.isFalloutMap
+                )
+            }
+            is MapEvent.OnMapLongClick -> {
+                viewModelScope.launch {
+                    repository.insertParkingSpot(
+                        ParkingSpot(
+                        event.latLng.latitude,
+                        event.latLng.longitude
+                    )
+                    )
+                }
+            }
+            is MapEvent.OnInfoWindowLongClick -> {
+                viewModelScope.launch {
+                    repository.deleteParkingSpot(event.spot)
+                }
+            }
+        }
     }
 }

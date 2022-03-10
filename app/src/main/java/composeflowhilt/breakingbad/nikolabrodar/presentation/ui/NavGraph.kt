@@ -34,7 +34,7 @@ import composeflowhilt.breakingbad.nikolabrodar.R
 import composeflowhilt.breakingbad.nikolabrodar.domain.model.Character
 import composeflowhilt.breakingbad.nikolabrodar.presentation.ui.detail.DetailScreen
 import composeflowhilt.breakingbad.nikolabrodar.presentation.ui.favorite.FavoriteScreen
-import composeflowhilt.breakingbad.nikolabrodar.presentation.ui.googlemapParkingSpot.ParkingSpotScreen
+import composeflowhilt.breakingbad.nikolabrodar.presentation.ui.googlemapParkingSpot.MapScreen
 import composeflowhilt.breakingbad.nikolabrodar.presentation.ui.list.ListScreen
 import composeflowhilt.breakingbad.nikolabrodar.presentation.utils.backHandler
 
@@ -60,7 +60,7 @@ fun NavGraph(startDestination: NavScreens = NavScreens.MAIN) {
         composable(
             route = "${NavScreens.GOOGLE_MAPS_PARKING_SPOT.route}/{id}",
             arguments = listOf(navArgument("id") { type = NavType.LongType })
-        ) { ParkingSpotScreen(viewModel = hiltViewModel()) }
+        ) { MapScreen(viewModel = hiltViewModel()) }
     }
 }
 

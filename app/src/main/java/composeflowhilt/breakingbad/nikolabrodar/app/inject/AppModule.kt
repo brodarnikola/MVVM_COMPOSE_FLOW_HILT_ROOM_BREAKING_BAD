@@ -24,6 +24,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import composeflowhilt.breakingbad.nikolabrodar.data.local.db.AppDatabase
 import composeflowhilt.breakingbad.nikolabrodar.data.local.db.CharacterDao
+import composeflowhilt.breakingbad.nikolabrodar.data.local.db.ParkingSpotDao
 import javax.inject.Singleton
 
 @Module
@@ -43,4 +44,8 @@ object AppModule {
     @Provides
     @Singleton
     fun provideCharacterDao(appDatabase: AppDatabase): CharacterDao = appDatabase.characterDao()
+
+    @Provides
+    @Singleton
+    fun provideParkingSpotDao(appDatabase: AppDatabase): ParkingSpotDao = appDatabase.parkingSpotDao
 }

@@ -20,10 +20,12 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import composeflowhilt.breakingbad.nikolabrodar.data.local.db.AppDatabase.Companion.DB_VERSION
 import composeflowhilt.breakingbad.nikolabrodar.data.local.model.CharacterEntity
+import composeflowhilt.breakingbad.nikolabrodar.data.local.model.ParkingSpotEntity
 
 @Database(
     entities = [
-        CharacterEntity::class
+        CharacterEntity::class,
+        ParkingSpotEntity::class,
     ],
     version = DB_VERSION,
     exportSchema = false
@@ -31,9 +33,11 @@ import composeflowhilt.breakingbad.nikolabrodar.data.local.model.CharacterEntity
 @TypeConverters(DateTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     companion object {
-        const val DB_VERSION = 1
+        const val DB_VERSION = 2
         const val NAME = "app.db"
     }
 
     abstract fun characterDao(): CharacterDao
+
+    abstract val parkingSpotDao: ParkingSpotDao
 }
