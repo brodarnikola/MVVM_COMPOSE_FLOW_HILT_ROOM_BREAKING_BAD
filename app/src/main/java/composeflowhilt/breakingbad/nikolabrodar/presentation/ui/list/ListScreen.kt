@@ -49,17 +49,19 @@ import kotlin.math.ceil
 fun ListScreen(
     viewModel: ListViewModel,
     select: (Character) -> Unit,
+    moveToGoogleMpas: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val list = viewModel.list.collectAsState()
     val clickFavorite: (Character) -> Unit = viewModel::upsertFavorite
-    Body(list, select, clickFavorite, modifier)
+    Body(list, select, moveToGoogleMpas, clickFavorite, modifier)
 }
 
 @Composable
 private fun Body(
     list: State<List<Character>>,
     select: (Character) -> Unit,
+    moveToGoogleMpas: (Int) -> Unit,
     clickFavorite: (Character) -> Unit,
     modifier: Modifier
 ) {
@@ -83,7 +85,11 @@ private fun Body(
             )
 
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    moveToGoogleMpas.invoke(7)
+//                    val character = Character()
+//                    select.invoke(character)
+                          /*TODO*/ },
 
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = MaterialTheme.colors.primaryVariant,

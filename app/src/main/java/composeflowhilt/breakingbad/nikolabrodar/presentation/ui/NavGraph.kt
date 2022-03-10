@@ -34,12 +34,14 @@ import composeflowhilt.breakingbad.nikolabrodar.R
 import composeflowhilt.breakingbad.nikolabrodar.domain.model.Character
 import composeflowhilt.breakingbad.nikolabrodar.presentation.ui.detail.DetailScreen
 import composeflowhilt.breakingbad.nikolabrodar.presentation.ui.favorite.FavoriteScreen
+import composeflowhilt.breakingbad.nikolabrodar.presentation.ui.googlemapParkingSpot.ParkingSpotScreen
 import composeflowhilt.breakingbad.nikolabrodar.presentation.ui.list.ListScreen
 import composeflowhilt.breakingbad.nikolabrodar.presentation.utils.backHandler
 
 sealed class NavScreens(val route: String) {
     object MAIN : NavScreens("main")
     object DETAIL : NavScreens("detail")
+    object GOOGLE_MAPS_PARKING_SPOT : NavScreens("google_maps_parking_spot")
 }
 
 @Composable
@@ -55,6 +57,10 @@ fun NavGraph(startDestination: NavScreens = NavScreens.MAIN) {
             route = "${NavScreens.DETAIL.route}/{id}",
             arguments = listOf(navArgument("id") { type = NavType.LongType })
         ) { DetailScreen(viewModel = hiltViewModel()) }
+        composable(
+            route = "${NavScreens.GOOGLE_MAPS_PARKING_SPOT.route}/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.LongType })
+        ) { ParkingSpotScreen(viewModel = hiltViewModel()) }
     }
 }
 
@@ -100,6 +106,7 @@ fun NavScreen(
             BottomNavTabs.LIST -> ListScreen(
                 hiltViewModel(),
                 actions.moveDetail,
+                actions.moveToGoogleMaps,
                 modifier
             )
             BottomNavTabs.FAVORITE -> FavoriteScreen(
@@ -109,6 +116,7 @@ fun NavScreen(
             )
         }
     }
+
 //    }
     backHandler(
         enabled = selectedTab.value != BottomNavTabs.LIST,
@@ -120,5 +128,9 @@ class MainActions(navController: NavHostController) {
 
     val moveDetail: (Character) -> Unit = { character ->
         navController.navigate("${NavScreens.DETAIL.route}/${character.charId}")
+    }
+
+    val moveToGoogleMaps: (Int) -> Unit = { character ->
+        navController.navigate("${NavScreens.GOOGLE_MAPS_PARKING_SPOT.route}/${character}")
     }
 }
