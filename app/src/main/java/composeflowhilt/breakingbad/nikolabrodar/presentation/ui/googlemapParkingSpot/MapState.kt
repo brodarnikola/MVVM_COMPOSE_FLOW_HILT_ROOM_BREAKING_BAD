@@ -6,5 +6,5 @@ import composeflowhilt.breakingbad.nikolabrodar.domain.model.ParkingSpot
 data class MapState(
     val properties: MapProperties = MapProperties(),
     val parkingSpots: List<ParkingSpot> = emptyList(),
-    val isFalloutMap: Boolean = false
+    val isFalloutMap: Boolean = true
 )

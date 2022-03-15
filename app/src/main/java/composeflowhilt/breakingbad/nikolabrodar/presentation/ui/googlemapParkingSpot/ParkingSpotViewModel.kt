@@ -38,6 +38,8 @@ class MapsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             repository.getParkingSpots().collectLatest { spots ->
+                val toogleGoogleMaps = MapEvent.ToggleFalloutMap
+                onEvent(toogleGoogleMaps)
                 state = state.copy(
                     parkingSpots = spots
                 )
@@ -53,6 +55,7 @@ class MapsViewModel @Inject constructor(
                         mapStyleOptions = if(state.isFalloutMap) {
                             null
                         } else MapStyleOptions(MapStyle.json),
+                        isMyLocationEnabled = true,
                     ),
                     isFalloutMap = !state.isFalloutMap
                 )
