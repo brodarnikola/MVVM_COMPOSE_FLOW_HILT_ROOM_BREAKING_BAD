@@ -21,25 +21,38 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ToggleOff
 import androidx.compose.material.icons.filled.ToggleOn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.LayoutDirection
-import com.google.accompanist.insets.Insets
-import com.google.accompanist.insets.rememberInsetsPaddingValues
-import com.google.android.gms.maps.UiSettings
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.MapUiSettings
-import com.google.maps.android.compose.Marker
+import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.maps.android.compose.*
 
 @Composable
 fun MapScreen(
     viewModel: MapsViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
+
+    // var uiSettings1 by remember { mutableStateOf(MapUiSettings()) }
+
+    println("Map state is" + viewModel.state.isFalloutMap)
+
+//    var propertiesGoogleMap = remember {
+//        mutableStateOf(MapProperties(/*mapType = MapType.SATELLITE,*/ mapStyleOptions = if(!viewModel.state.isFalloutMap) {
+//            MapStyleOptions(MapStyle.json)
+//        } else null))
+//    }
+
+    val paris = LatLng(48.858833, 2.276995)
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(paris, 10f)
+    }
+
     val scaffoldState = rememberScaffoldState()
     val uiSettings = remember {
-        MapUiSettings(zoomControlsEnabled = true)
+        MapUiSettings(zoomControlsEnabled = true, compassEnabled = true, myLocationButtonEnabled = true)
     }
     Scaffold(
         scaffoldState = scaffoldState,
@@ -57,13 +70,11 @@ fun MapScreen(
         },
         floatingActionButtonPosition = FabPosition.Center,
         isFloatingActionButtonDocked = false,
-//        bottomBar = { BottomAppBar() {
-//
-//        } }
     ) {
         GoogleMap(
             modifier = Modifier.fillMaxSize( fraction = 1f ),
-            properties = viewModel.state.properties,
+            properties = viewModel.state.properties, // propertiesGoogleMap.component1(), //
+            cameraPositionState = cameraPositionState,
             uiSettings = uiSettings,
             onMapLongClick = {
                 viewModel.onEvent(MapEvent.OnMapLongClick(it))
