@@ -15,25 +15,75 @@
  */
 package composeflowhilt.breakingbad.nikolabrodar.presentation.ui.googlemapParkingSpot
 
+import android.Manifest
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ToggleOff
 import androidx.compose.material.icons.filled.ToggleOn
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.google.accompanist.permissions.rememberPermissionState
 import com.google.maps.android.compose.*
+import composeflowhilt.breakingbad.nikolabrodar.presentation.utils.isPermanentlyDenied
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun MapScreen(
     viewModel: MapsViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
+
+    val permissionsState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(
+        key1 = lifecycleOwner,
+        effect = {
+            val observer = LifecycleEventObserver { _, event ->
+                if(event == Lifecycle.Event.ON_START) {
+                    permissionsState.launchPermissionRequest()
+                }
+            }
+            lifecycleOwner.lifecycle.addObserver(observer)
+
+            onDispose {
+                lifecycleOwner.lifecycle.removeObserver(observer)
+            }
+        }
+    )
+
+    when( permissionsState.permission ) {
+        Manifest.permission.ACCESS_FINE_LOCATION -> {
+            when {
+                permissionsState.hasPermission -> {
+                    displayUIWithPermissions(viewModel)
+                    // Text(text = "Camera permission accepted")
+                }
+                permissionsState.shouldShowRationale -> {
+                    Text(text = "Location permission is needed to access the location")
+                }
+                permissionsState.isPermanentlyDenied() -> {
+                    Text(text = "Location permission was permanently denied. You can enable it in the app settings.")
+                }
+            }
+        }
+    }
+
+}
+
+@Composable
+fun displayUIWithPermissions(
+    viewModel: MapsViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
 
     // var uiSettings1 by remember { mutableStateOf(MapUiSettings()) }
 
