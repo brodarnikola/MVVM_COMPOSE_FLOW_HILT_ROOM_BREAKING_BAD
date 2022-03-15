@@ -47,5 +47,5 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideParkingSpotDao(appDatabase: AppDatabase): ParkingSpotDao = appDatabase.parkingSpotDao
+    fun provideParkingSpotDao(appDatabase: AppDatabase): ParkingSpotDao = appDatabase.parkingSpotDao()
 }

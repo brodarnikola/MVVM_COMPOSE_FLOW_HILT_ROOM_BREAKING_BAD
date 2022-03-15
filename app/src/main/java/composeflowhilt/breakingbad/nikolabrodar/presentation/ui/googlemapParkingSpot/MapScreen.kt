@@ -16,16 +16,16 @@
 package composeflowhilt.breakingbad.nikolabrodar.presentation.ui.googlemapParkingSpot
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.Scaffold
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ToggleOff
 import androidx.compose.material.icons.filled.ToggleOn
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.LayoutDirection
+import com.google.accompanist.insets.Insets
+import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.android.gms.maps.UiSettings
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
@@ -39,12 +39,12 @@ fun MapScreen(
 ) {
     val scaffoldState = rememberScaffoldState()
     val uiSettings = remember {
-        MapUiSettings(zoomControlsEnabled = false)
+        MapUiSettings(zoomControlsEnabled = true)
     }
     Scaffold(
         scaffoldState = scaffoldState,
         floatingActionButton = {
-            FloatingActionButton(onClick = {
+            FloatingActionButton( onClick = {
                 viewModel.onEvent(MapEvent.ToggleFalloutMap)
             }) {
                 Icon(
@@ -54,10 +54,15 @@ fun MapScreen(
                     contentDescription = "Toggle Fallout map"
                 )
             }
-        }
+        },
+        floatingActionButtonPosition = FabPosition.Center,
+        isFloatingActionButtonDocked = false,
+//        bottomBar = { BottomAppBar() {
+//
+//        } }
     ) {
         GoogleMap(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize( fraction = 1f ),
             properties = viewModel.state.properties,
             uiSettings = uiSettings,
             onMapLongClick = {

@@ -39,5 +39,6 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun characterDao(): CharacterDao
 
-    abstract val parkingSpotDao: ParkingSpotDao
+    abstract fun parkingSpotDao(): ParkingSpotDao
+    // abstract val parkingSpotDao: ParkingSpotDao
 }

@@ -31,7 +31,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
+        // this will display applications edge to edge.. controlled by boolean propertie -> true or false
+        WindowCompat.setDecorFitsSystemWindows(window, true)
         setContent {
             ComposeApp {
                 CompositionLocalProvider(LocalBackDispatcher.provides(onBackPressedDispatcher)) {

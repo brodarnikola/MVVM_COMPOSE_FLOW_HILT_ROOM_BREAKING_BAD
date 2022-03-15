@@ -33,6 +33,6 @@ object ParkingSpotRepositoryModule {
     @Provides
     @Singleton
     fun provideParkingSpotRepository(appDatabase: AppDatabase): ParkingSpotRepository {
-        return ParkingSpotRepositoryImpl(appDatabase.parkingSpotDao)
+        return ParkingSpotRepositoryImpl(appDatabase.parkingSpotDao())
     }
 }
